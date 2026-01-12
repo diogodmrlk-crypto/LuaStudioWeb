@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lua Studio Web • Editor</title>
+
+<link rel="stylesheet" href="css/style.css">
+
+<script src="https://cdn.jsdelivr.net/npm/monaco-editor@0.45.0/min/vs/loader.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/luaparse@0.3.1/dist/luaparse.js"></script>
+
+<script src="js/robloxApi.js"></script>
+<script src="js/linter.js"></script>
+<script src="js/uiPreview.js"></script>
+</head>
+
+<body>
+
+<header class="editor-top glass">
+  <div class="logo">LuaStudio</div>
+  <div class="actions">
+    <button onclick="runScript()">▶Terminal</button>
+    <button onclick="checkErrors()">Analise</button>
+    <button onclick="renderPreview()">Previa</button>
+    <button onclick="saveFile()"> Salvar</button>
+  </div>
+</header>
+
+<main class="editor-layout">
+
+  <aside class="sidebar glass">
+    <div class="sidebar-title">Arquivos</div>
+    <div id="files"></div>
+    <button class="new-file" onclick="newFile()">＋ Novo</button>
+  </aside>
+
+  <section class="editor-wrap">
+    <div id="editor"></div>
+    <div id="console" class="console"></div>
+  </section>
+
+  <aside class="preview-wrap glass">
+    <div class="sidebar-title">Preview UI</div>
+    <div id="preview" class="preview"></div>
+  </aside>
+
+</main>
+
+<footer class="status-bar glass">
+  <span id="status">Pronto.</span>
+</footer>
+
+<script src="js/editor.js"></script>
+</body>
+</html>
