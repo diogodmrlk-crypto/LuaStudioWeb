@@ -1,0 +1,52 @@
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Inter;background:#0a0a0a;color:#fff}
+
+/* FUNDO */
+.bg{
+ position:fixed;inset:0;
+ background:radial-gradient(circle,#00ff8855,transparent 40%);
+ filter:blur(80px);z-index:-1;
+}
+
+/* HOME */
+.hero{min-height:100vh;display:flex;align-items:center;justify-content:center}
+.card{padding:40px;border-radius:28px;text-align:center;max-width:900px}
+.glass{
+ background:rgba(20,20,20,.7);
+ backdrop-filter:blur(20px);
+ border:1px solid rgba(255,255,255,.1)
+}
+.badge{background:#00ff88;color:#000;padding:6px 14px;border-radius:999px;font-weight:900}
+h1{font-size:56px}
+h1 span{color:#00ff88}
+.subtitle{margin:20px 0;color:#ccc}
+.features{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+.feature{background:#111;padding:14px;border-radius:14px}
+.btn-primary{
+ display:inline-block;margin-top:24px;padding:16px 36px;
+ background:#00ff88;color:#000;border-radius:18px;
+ font-weight:900;text-decoration:none
+}
+
+/* EDITOR */
+.editor-top{display:flex;justify-content:space-between;padding:12px;margin:12px;border-radius:18px}
+.actions button{margin-left:8px;padding:10px 14px;border-radius:12px;border:none;background:#222;color:#fff}
+.editor-layout{display:flex;gap:12px;padding:12px}
+.sidebar,.preview-wrap{width:240px;padding:12px;border-radius:20px}
+.editor-wrap{flex:1;border-radius:20px;overflow:hidden}
+#editor{height:50vh}
+.console{height:160px;background:#0d0d0d;padding:10px;font-family:monospace;overflow:auto}
+.log.print{color:#eee}
+.log.warn{color:#ffcc00}
+.log.error{color:#ff5555}
+.preview{background:#111;border-radius:16px;padding:12px}
+.status-bar{margin:12px;padding:10px;border-radius:14px;color:#aaa}
+.file{padding:8px;border-radius:10px;cursor:pointer}
+.file.active{background:#00ff88;color:#000;font-weight:800}
+.new-file{margin-top:10px;padding:10px;border-radius:12px;border:none;background:#00ff88;font-weight:800}
+
+@media(max-width:900px){
+ .editor-layout{flex-direction:column}
+ .sidebar,.preview-wrap{width:100%}
+ #editor{height:45vh}
+}
