@@ -5,10 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Lua Studio Web</title>
 
-<link rel="stylesheet" href="css/style.css">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
-
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
 input {
@@ -38,8 +35,6 @@ input {
 </head>
 
 <body class="home">
-<div class="bg"></div>
-
 <main class="hero">
   <div class="card glass">
 
@@ -84,18 +79,7 @@ input {
 </main>
 
 <script>
-const supabase = supabase.createClient(
-  "https://zqvtxbdtbceqnhqlvzti.supabase.co",
-  "sb_publishable_T3L4EdVk2vJcAgdedrwB4g_k9Ik1k3_"
-);
-
-// se já estiver logado
-supabase.auth.getSession().then(({ data }) => {
-  if (data.session) {
-    window.location.href = "editor.html";
-  }
-});
-
+// Alterna telas
 function showRegister() {
   document.getElementById("loginScreen").classList.add("hidden");
   document.getElementById("registerScreen").classList.remove("hidden");
@@ -108,7 +92,28 @@ function showLogin() {
   document.getElementById("status").innerText = "";
 }
 
-async function login() {
+// Lista de usuários (vai ser salvo em acc.json)
+let users = {};
+
+// Tenta carregar users do localStorage para persistência
+if (localStorage.getItem("accData")) {
+  users = JSON.parse(localStorage.getItem("accData"));
+}
+
+// Salva JSON em localStorage e cria o acc.json para download
+function saveUsers() {
+  localStorage.setItem("accData", JSON.stringify(users, null, 2));
+
+  // Cria um arquivo JSON para download
+  const blob = new Blob([JSON.stringify(users, null, 2)], { type: "application/json" });
+  const link = document.createElement("a");
+  link.href = URL.createObjectURL(blob);
+  link.download = "acc.json";
+  // link.click(); // descomente se quiser baixar automaticamente
+}
+
+// Login
+function login() {
   const email = document.getElementById("loginEmail").value.trim();
   const password = document.getElementById("loginPassword").value.trim();
   const status = document.getElementById("status");
@@ -118,21 +123,21 @@ async function login() {
     return;
   }
 
-  status.innerText = "Entrando...";
+  if (users[email] && users[email] === password) {
+    // Salva login no localStorage
+    localStorage.setItem("loggedInUser", email);
 
-  const { error } = await supabase.auth.signInWithPassword({
-    email,
-    password
-  });
-
-  if (error) {
-    status.innerText = error.message;
+    status.innerText = "Entrando...";
+    setTimeout(() => {
+      window.location.href = "editor.html";
+    }, 500);
   } else {
-    window.location.href = "editor.html";
+    status.innerText = "Email ou senha incorretos";
   }
 }
 
-async function register() {
+// Registro
+function register() {
   const email = document.getElementById("registerEmail").value.trim();
   const password = document.getElementById("registerPassword").value.trim();
   const status = document.getElementById("status");
@@ -142,21 +147,30 @@ async function register() {
     return;
   }
 
-  status.innerText = "Criando conta...";
-
-  const { error } = await supabase.auth.signUp({
-    email,
-    password
-  });
-
-  if (error) {
-    status.innerText = error.message;
-  } else {
-    status.innerText = "Conta criada! Entrando...";
-    setTimeout(() => {
-      window.location.href = "editor.html";
-    }, 800);
+  if (users[email]) {
+    status.innerText = "Email já cadastrado";
+    return;
   }
+
+  // Adiciona usuário
+  users[email] = password;
+
+  // Salva e gera arquivo
+  saveUsers();
+
+  // Salva login automaticamente
+  localStorage.setItem("loggedInUser", email);
+
+  status.innerText = "Conta criada! Entrando...";
+  setTimeout(() => {
+    window.location.href = "editor.html";
+  }, 800);
+}
+
+// Mantém login se já estiver logado
+const loggedInUser = localStorage.getItem("loggedInUser");
+if (loggedInUser) {
+  window.location.href = "editor.html";
 }
 </script>
 
