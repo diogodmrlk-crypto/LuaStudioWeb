@@ -5,18 +5,23 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Lua Studio Web • Editor</title>
 
+<!-- CSS principal -->
 <link rel="stylesheet" href="css/style.css">
 
+<!-- Monaco Editor -->
 <script src="https://cdn.jsdelivr.net/npm/monaco-editor@0.45.0/min/vs/loader.js"></script>
+
+<!-- Lua Parse para análise de código -->
 <script src="https://cdn.jsdelivr.net/npm/luaparse@0.3.1/dist/luaparse.js"></script>
 
+<!-- JS do editor -->
 <script src="js/robloxApi.js"></script>
 <script src="js/linter.js"></script>
 <script src="js/uiPreview.js"></script>
 
 <style>
-  /* Botão de logout */
-  #logoutBtn {
+/* Botão de logout */
+#logoutBtn {
     position: absolute;
     top: 15px;
     right: 20px;
@@ -27,19 +32,36 @@
     color: white;
     cursor: pointer;
     font-weight: bold;
-  }
+}
+
+/* Pequenos ajustes visuais */
+.editor-top .actions button {
+    margin-left: 6px;
+    padding: 6px 10px;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    background: #7cf0a6;
+    font-weight: bold;
+}
+
+.editor-top .logo {
+    font-weight: 900;
+    font-size: 20px;
+    color: #fff;
+}
 </style>
 </head>
 
-<body>
+<body class="editor-body">
 
 <header class="editor-top glass">
   <div class="logo">LuaStudio</div>
   <div class="actions">
-    <button onclick="runScript()">▶Terminal</button>
+    <button onclick="runScript()">▶ Terminal</button>
     <button onclick="checkErrors()">Analise</button>
-    <button onclick="renderPreview()">Previa</button>
-    <button onclick="saveFile()"> Salvar</button>
+    <button onclick="renderPreview()">Prévia</button>
+    <button onclick="saveFile()">Salvar</button>
   </div>
   <button id="logoutBtn" onclick="logout()">Sair</button>
 </header>
@@ -77,17 +99,17 @@
 const loggedInUser = localStorage.getItem("loggedInUser");
 
 if (!loggedInUser) {
-  // Usuário não está logado, redireciona
-  alert("Você precisa estar logado para acessar o editor!");
-  window.location.href = "index.html";
+    // Usuário não está logado, redireciona
+    alert("Você precisa estar logado para acessar o editor!");
+    window.location.href = "index.html";
 } else {
-  console.log("Usuário logado:", loggedInUser);
+    console.log("Usuário logado:", loggedInUser);
 }
 
 // Função de logout
 function logout() {
-  localStorage.removeItem("loggedInUser");
-  window.location.href = "index.html";
+    localStorage.removeItem("loggedInUser");
+    window.location.href = "index.html";
 }
 </script>
 
