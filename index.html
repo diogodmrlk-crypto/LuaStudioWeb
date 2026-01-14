@@ -4,8 +4,34 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Lua Studio Web</title>
+
 <link rel="stylesheet" href="css/style.css">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<style>
+input {
+  width: 100%;
+  padding: 12px;
+  margin: 8px 0;
+  border-radius: 10px;
+  border: none;
+  outline: none;
+  font-family: Inter;
+}
+.toggle {
+  cursor: pointer;
+  color: #7cf0a6;
+  margin-top: 10px;
+  display: block;
+  text-align: center;
+}
+#status {
+  margin-top: 10px;
+  font-size: 14px;
+}
+</style>
 </head>
 
 <body class="home">
@@ -13,19 +39,97 @@
 
 <main class="hero">
   <div class="card glass">
+
     <span class="badge">LUA CODE</span>
-
     <h1>Lua <span>Studio</span> Web</h1>
-    <p class="subtitle">
-      Editor Lua profissional
-    </p>
 
-    <div class="features">
-      <div class="feature">🇮🇲Desenvolvido para ajudar outros Progamadores</div>
-    </div>
+    <p class="subtitle" id="formTitle">Entrar na conta</p>
 
-    <a href="editor.html" class="btn-primary">🚀 Abrir Editor</a>
+    <input type="email" id="email" placeholder="Email">
+    <input type="password" id="password" placeholder="Senha">
+
+    <button class="btn-primary" onclick="submitForm()">Entrar</button>
+
+    <span class="toggle" id="toggleText" onclick="toggleMode()">
+      Não tem conta? Criar conta
+    </span>
+
+    <p id="status"></p>
+
   </div>
 </main>
+
+<script>
+const supabase = supabase.createClient(
+  "https://zqvtxbdtbceqnhqlvzti.supabase.co",
+  "sb_publishable_T3L4EdVk2vJcAgdedrwB4g_k9Ik1k3_"
+);
+
+let mode = "login";
+
+// se já estiver logado, entra direto
+supabase.auth.getSession().then(({ data }) => {
+  if (data.session) {
+    window.location.href = "editor.html";
+  }
+});
+
+function toggleMode() {
+  mode = mode === "login" ? "register" : "login";
+
+  document.getElementById("formTitle").innerText =
+    mode === "login" ? "Entrar na conta" : "Criar conta";
+
+  document.querySelector(".btn-primary").innerText =
+    mode === "login" ? "Entrar" : "Registrar";
+
+  document.getElementById("toggleText").innerText =
+    mode === "login"
+      ? "Não tem conta? Criar conta"
+      : "Já tem conta? Entrar";
+}
+
+async function submitForm() {
+  const email = document.getElementById("email").value;
+  const password = document.getElementById("password").value;
+  const status = document.getElementById("status");
+
+  if (!email || !password) {
+    status.innerText = "Preencha email e senha";
+    return;
+  }
+
+  status.innerText = "Processando...";
+
+  if (mode === "login") {
+    const { error } = await supabase.auth.signInWithPassword({
+      email,
+      password
+    });
+
+    if (error) {
+      status.innerText = error.message;
+    } else {
+      window.location.href = "editor.html";
+    }
+
+  } else {
+    const { error } = await supabase.auth.signUp({
+      email,
+      password
+    });
+
+    if (error) {
+      status.innerText = error.message;
+    } else {
+      status.innerText = "Conta criada! Entrando...";
+      setTimeout(() => {
+        window.location.href = "editor.html";
+      }, 800);
+    }
+  }
+}
+</script>
+
 </body>
 </html>
