@@ -3,11 +3,61 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Lua Studio Web</title>
+<title>Lua Studio Web • Login</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
 
 <style>
+body, html {
+  margin: 0;
+  padding: 0;
+  font-family: 'Inter', sans-serif;
+  background: linear-gradient(135deg,#1f1f1f,#121212);
+  color: #fff;
+  height: 100%;
+}
+
+.hero {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+
+.card {
+  background: rgba(255,255,255,0.05);
+  padding: 30px;
+  border-radius: 20px;
+  backdrop-filter: blur(12px);
+  width: 320px;
+  text-align: center;
+}
+
+.badge {
+  display: inline-block;
+  background: #7cf0a6;
+  color: #000;
+  padding: 4px 10px;
+  border-radius: 10px;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+h1 {
+  margin: 10px 0 20px 0;
+  font-weight: 900;
+}
+
+h1 span {
+  color: #7cf0a6;
+}
+
+.subtitle {
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
 input {
   width: 100%;
   padding: 12px;
@@ -17,6 +67,23 @@ input {
   outline: none;
   font-family: Inter;
 }
+
+button.btn-primary {
+  width: 100%;
+  padding: 12px;
+  border-radius: 10px;
+  border: none;
+  background: #7cf0a6;
+  color: #000;
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+button.btn-primary:hover {
+  background: #5bd18f;
+}
+
 .link {
   cursor: pointer;
   color: #7cf0a6;
@@ -24,17 +91,16 @@ input {
   display: block;
   text-align: center;
 }
+
 #status {
   margin-top: 10px;
   font-size: 14px;
-}
-.hidden {
-  display: none;
+  min-height: 18px;
 }
 </style>
 </head>
 
-<body class="home">
+<body>
 <main class="hero">
   <div class="card glass">
 
@@ -48,13 +114,9 @@ input {
       <input type="email" id="loginEmail" placeholder="Email">
       <input type="password" id="loginPassword" placeholder="Senha">
 
-      <button type="button" class="btn-primary" onclick="login()">
-        Entrar
-      </button>
+      <button type="button" class="btn-primary" onclick="login()">Entrar</button>
 
-      <span class="link" onclick="showRegister()">
-        Não tem conta? Criar conta
-      </span>
+      <span class="link" onclick="showRegister()">Não tem conta? Criar conta</span>
     </div>
 
     <!-- REGISTRO -->
@@ -64,13 +126,9 @@ input {
       <input type="email" id="registerEmail" placeholder="Email">
       <input type="password" id="registerPassword" placeholder="Senha">
 
-      <button type="button" class="btn-primary" onclick="register()">
-        Criar conta
-      </button>
+      <button type="button" class="btn-primary" onclick="register()">Criar conta</button>
 
-      <span class="link" onclick="showLogin()">
-        Já tenho conta? Entrar
-      </span>
+      <span class="link" onclick="showLogin()">Já tenho conta? Entrar</span>
     </div>
 
     <p id="status"></p>
@@ -104,12 +162,12 @@ if (localStorage.getItem("accData")) {
 function saveUsers() {
   localStorage.setItem("accData", JSON.stringify(users, null, 2));
 
-  // Cria um arquivo JSON para download
+  // Cria um arquivo JSON para download (opcional)
   const blob = new Blob([JSON.stringify(users, null, 2)], { type: "application/json" });
   const link = document.createElement("a");
   link.href = URL.createObjectURL(blob);
   link.download = "acc.json";
-  // link.click(); // descomente se quiser baixar automaticamente
+  // link.click(); // descomente para baixar automaticamente
 }
 
 // Login
@@ -173,6 +231,5 @@ if (loggedInUser) {
   window.location.href = "editor.html";
 }
 </script>
-
 </body>
 </html>
