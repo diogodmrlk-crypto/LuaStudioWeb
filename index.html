@@ -20,18 +20,19 @@ input {
   outline: none;
   font-family: Inter;
 }
-.btn-secondary {
-  margin-top: 8px;
-  background: transparent;
-  border: 1px solid #7cf0a6;
-  color: #7cf0a6;
-  padding: 12px;
-  border-radius: 12px;
+.link {
   cursor: pointer;
+  color: #7cf0a6;
+  margin-top: 10px;
+  display: block;
+  text-align: center;
 }
 #status {
   margin-top: 10px;
   font-size: 14px;
+}
+.hidden {
+  display: none;
 }
 </style>
 </head>
@@ -44,20 +45,38 @@ input {
 
     <span class="badge">LUA CODE</span>
     <h1>Lua <span>Studio</span> Web</h1>
-    <p class="subtitle">Entrar ou criar conta</p>
 
-    <input type="email" id="email" placeholder="Email">
-    <input type="password" id="password" placeholder="Senha">
+    <!-- LOGIN -->
+    <div id="loginScreen">
+      <p class="subtitle">Entrar na conta</p>
 
-    <!-- ENTRAR -->
-    <button type="button" class="btn-primary" onclick="login()">
-      Entrar
-    </button>
+      <input type="email" id="loginEmail" placeholder="Email">
+      <input type="password" id="loginPassword" placeholder="Senha">
 
-    <!-- CRIAR CONTA -->
-    <button type="button" class="btn-secondary" onclick="register()">
-      Criar conta
-    </button>
+      <button type="button" class="btn-primary" onclick="login()">
+        Entrar
+      </button>
+
+      <span class="link" onclick="showRegister()">
+        Não tem conta? Criar conta
+      </span>
+    </div>
+
+    <!-- REGISTRO -->
+    <div id="registerScreen" class="hidden">
+      <p class="subtitle">Criar conta</p>
+
+      <input type="email" id="registerEmail" placeholder="Email">
+      <input type="password" id="registerPassword" placeholder="Senha">
+
+      <button type="button" class="btn-primary" onclick="register()">
+        Criar conta
+      </button>
+
+      <span class="link" onclick="showLogin()">
+        Já tenho conta? Entrar
+      </span>
+    </div>
 
     <p id="status"></p>
 
@@ -77,9 +96,21 @@ supabase.auth.getSession().then(({ data }) => {
   }
 });
 
+function showRegister() {
+  document.getElementById("loginScreen").classList.add("hidden");
+  document.getElementById("registerScreen").classList.remove("hidden");
+  document.getElementById("status").innerText = "";
+}
+
+function showLogin() {
+  document.getElementById("registerScreen").classList.add("hidden");
+  document.getElementById("loginScreen").classList.remove("hidden");
+  document.getElementById("status").innerText = "";
+}
+
 async function login() {
-  const email = document.getElementById("email").value.trim();
-  const password = document.getElementById("password").value.trim();
+  const email = document.getElementById("loginEmail").value.trim();
+  const password = document.getElementById("loginPassword").value.trim();
   const status = document.getElementById("status");
 
   if (!email || !password) {
@@ -102,8 +133,8 @@ async function login() {
 }
 
 async function register() {
-  const email = document.getElementById("email").value.trim();
-  const password = document.getElementById("password").value.trim();
+  const email = document.getElementById("registerEmail").value.trim();
+  const password = document.getElementById("registerPassword").value.trim();
   const status = document.getElementById("status");
 
   if (!email || !password) {
@@ -113,7 +144,7 @@ async function register() {
 
   status.innerText = "Criando conta...";
 
-  const { data, error } = await supabase.auth.signUp({
+  const { error } = await supabase.auth.signUp({
     email,
     password
   });
@@ -121,7 +152,7 @@ async function register() {
   if (error) {
     status.innerText = error.message;
   } else {
-    status.innerText = "Conta criada!";
+    status.innerText = "Conta criada! Entrando...";
     setTimeout(() => {
       window.location.href = "editor.html";
     }, 800);
