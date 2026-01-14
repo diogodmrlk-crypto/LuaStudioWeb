@@ -13,6 +13,22 @@
 <script src="js/robloxApi.js"></script>
 <script src="js/linter.js"></script>
 <script src="js/uiPreview.js"></script>
+
+<style>
+  /* Botão de logout */
+  #logoutBtn {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    padding: 6px 12px;
+    border: none;
+    border-radius: 6px;
+    background: #ff5e5e;
+    color: white;
+    cursor: pointer;
+    font-weight: bold;
+  }
+</style>
 </head>
 
 <body>
@@ -25,6 +41,7 @@
     <button onclick="renderPreview()">Previa</button>
     <button onclick="saveFile()"> Salvar</button>
   </div>
+  <button id="logoutBtn" onclick="logout()">Sair</button>
 </header>
 
 <main class="editor-layout">
@@ -52,5 +69,27 @@
 </footer>
 
 <script src="js/editor.js"></script>
+
+<script>
+// =======================================
+// PROTEÇÃO DE LOGIN
+// =======================================
+const loggedInUser = localStorage.getItem("loggedInUser");
+
+if (!loggedInUser) {
+  // Usuário não está logado, redireciona
+  alert("Você precisa estar logado para acessar o editor!");
+  window.location.href = "index.html";
+} else {
+  console.log("Usuário logado:", loggedInUser);
+}
+
+// Função de logout
+function logout() {
+  localStorage.removeItem("loggedInUser");
+  window.location.href = "index.html";
+}
+</script>
+
 </body>
 </html>
