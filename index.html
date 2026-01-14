@@ -48,7 +48,10 @@ input {
     <input type="email" id="email" placeholder="Email">
     <input type="password" id="password" placeholder="Senha">
 
-    <button class="btn-primary" onclick="submitForm()">Entrar</button>
+    <!-- ⚠️ TYPE BUTTON (ESSENCIAL) -->
+    <button type="button" class="btn-primary" onclick="submitForm()">
+      Entrar
+    </button>
 
     <span class="toggle" id="toggleText" onclick="toggleMode()">
       Não tem conta? Criar conta
@@ -67,7 +70,7 @@ const supabase = supabase.createClient(
 
 let mode = "login";
 
-// se já estiver logado, entra direto
+// Se já estiver logado, entra direto
 supabase.auth.getSession().then(({ data }) => {
   if (data.session) {
     window.location.href = "editor.html";
@@ -90,8 +93,8 @@ function toggleMode() {
 }
 
 async function submitForm() {
-  const email = document.getElementById("email").value;
-  const password = document.getElementById("password").value;
+  const email = document.getElementById("email").value.trim();
+  const password = document.getElementById("password").value.trim();
   const status = document.getElementById("status");
 
   if (!email || !password) {
