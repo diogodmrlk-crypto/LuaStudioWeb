@@ -20,12 +20,14 @@ input {
   outline: none;
   font-family: Inter;
 }
-.toggle {
-  cursor: pointer;
+.btn-secondary {
+  margin-top: 8px;
+  background: transparent;
+  border: 1px solid #7cf0a6;
   color: #7cf0a6;
-  margin-top: 10px;
-  display: block;
-  text-align: center;
+  padding: 12px;
+  border-radius: 12px;
+  cursor: pointer;
 }
 #status {
   margin-top: 10px;
@@ -42,20 +44,20 @@ input {
 
     <span class="badge">LUA CODE</span>
     <h1>Lua <span>Studio</span> Web</h1>
-
-    <p class="subtitle" id="formTitle">Entrar na conta</p>
+    <p class="subtitle">Entrar ou criar conta</p>
 
     <input type="email" id="email" placeholder="Email">
     <input type="password" id="password" placeholder="Senha">
 
-    <!-- ⚠️ TYPE BUTTON (ESSENCIAL) -->
-    <button type="button" class="btn-primary" onclick="submitForm()">
+    <!-- ENTRAR -->
+    <button type="button" class="btn-primary" onclick="login()">
       Entrar
     </button>
 
-    <span class="toggle" id="toggleText" onclick="toggleMode()">
-      Não tem conta? Criar conta
-    </span>
+    <!-- CRIAR CONTA -->
+    <button type="button" class="btn-secondary" onclick="register()">
+      Criar conta
+    </button>
 
     <p id="status"></p>
 
@@ -68,31 +70,14 @@ const supabase = supabase.createClient(
   "sb_publishable_T3L4EdVk2vJcAgdedrwB4g_k9Ik1k3_"
 );
 
-let mode = "login";
-
-// Se já estiver logado, entra direto
+// se já estiver logado
 supabase.auth.getSession().then(({ data }) => {
   if (data.session) {
     window.location.href = "editor.html";
   }
 });
 
-function toggleMode() {
-  mode = mode === "login" ? "register" : "login";
-
-  document.getElementById("formTitle").innerText =
-    mode === "login" ? "Entrar na conta" : "Criar conta";
-
-  document.querySelector(".btn-primary").innerText =
-    mode === "login" ? "Entrar" : "Registrar";
-
-  document.getElementById("toggleText").innerText =
-    mode === "login"
-      ? "Não tem conta? Criar conta"
-      : "Já tem conta? Entrar";
-}
-
-async function submitForm() {
+async function login() {
   const email = document.getElementById("email").value.trim();
   const password = document.getElementById("password").value.trim();
   const status = document.getElementById("status");
@@ -102,34 +87,44 @@ async function submitForm() {
     return;
   }
 
-  status.innerText = "Processando...";
+  status.innerText = "Entrando...";
 
-  if (mode === "login") {
-    const { error } = await supabase.auth.signInWithPassword({
-      email,
-      password
-    });
+  const { error } = await supabase.auth.signInWithPassword({
+    email,
+    password
+  });
 
-    if (error) {
-      status.innerText = error.message;
-    } else {
-      window.location.href = "editor.html";
-    }
-
+  if (error) {
+    status.innerText = error.message;
   } else {
-    const { error } = await supabase.auth.signUp({
-      email,
-      password
-    });
+    window.location.href = "editor.html";
+  }
+}
 
-    if (error) {
-      status.innerText = error.message;
-    } else {
-      status.innerText = "Conta criada! Entrando...";
-      setTimeout(() => {
-        window.location.href = "editor.html";
-      }, 800);
-    }
+async function register() {
+  const email = document.getElementById("email").value.trim();
+  const password = document.getElementById("password").value.trim();
+  const status = document.getElementById("status");
+
+  if (!email || !password) {
+    status.innerText = "Preencha email e senha";
+    return;
+  }
+
+  status.innerText = "Criando conta...";
+
+  const { data, error } = await supabase.auth.signUp({
+    email,
+    password
+  });
+
+  if (error) {
+    status.innerText = error.message;
+  } else {
+    status.innerText = "Conta criada!";
+    setTimeout(() => {
+      window.location.href = "editor.html";
+    }, 800);
   }
 }
 </script>
